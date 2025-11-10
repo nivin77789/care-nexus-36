@@ -3,7 +3,7 @@ import { collection, query, where, onSnapshot, Timestamp, orderBy } from 'fireba
 import { db } from '@/services/firebase';
 import { useAuthStore } from '@/store/authStore';
 import { motion } from 'framer-motion';
-import { Clock, MapPin, User, CheckCircle, AlertCircle } from 'lucide-react';
+import { Clock, MapPin, User, CheckCircle, AlertCircle, Navigation } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 
@@ -11,6 +11,7 @@ interface Visit {
   id: string;
   clientName: string;
   clientAddress: string;
+  clientId: string;
   scheduledTime: Date;
   duration: number;
   status: 'scheduled' | 'in-progress' | 'completed';
@@ -49,6 +50,7 @@ export default function MyDay() {
               id: doc.id,
               clientName: data.clientName,
               clientAddress: data.clientAddress,
+              clientId: data.clientId,
               scheduledTime,
               duration: data.duration,
               status: data.status,
@@ -190,16 +192,30 @@ export default function MyDay() {
               )}
 
               {/* Actions */}
-              {visit.status === 'scheduled' && (
-                <Button className="w-full bg-gradient-primary shadow-glow">
-                  Start Visit
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-none"
+                  onClick={() => {
+                    // Open Google Maps with directions
+                    const address = encodeURIComponent(visit.clientAddress);
+                    window.open(`https://www.google.com/maps/dir/?api=1&destination=${address}`, '_blank');
+                  }}
+                >
+                  <Navigation className="h-4 w-4" />
                 </Button>
-              )}
-              {visit.status === 'in-progress' && (
-                <Button className="w-full" variant="secondary">
-                  Complete Visit
-                </Button>
-              )}
+                {visit.status === 'scheduled' && (
+                  <Button className="flex-1 bg-gradient-primary shadow-glow">
+                    Start Visit
+                  </Button>
+                )}
+                {visit.status === 'in-progress' && (
+                  <Button className="flex-1" variant="secondary">
+                    Complete Visit
+                  </Button>
+                )}
+              </div>
             </motion.div>
           ))
         )}

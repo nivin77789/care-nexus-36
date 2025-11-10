@@ -22,6 +22,7 @@ import Profile from '@/pages/caretaker/Profile';
 import Dashboard from '@/pages/admin/Dashboard';
 import Clients from '@/pages/admin/Clients';
 import Scheduling from '@/pages/admin/Scheduling';
+import ClientTracking from '@/pages/admin/ClientTracking';
 import Carers from '@/pages/admin/Carers';
 import AdminMessages from '@/pages/admin/Messages';
 
@@ -77,6 +78,7 @@ const App = () => {
                   <Route path="/admin/dashboard" element={<Dashboard />} />
                   <Route path="/admin/clients" element={<Clients />} />
                   <Route path="/admin/scheduling" element={<Scheduling />} />
+                  <Route path="/admin/client-tracking" element={<ClientTracking />} />
                   <Route path="/admin/actions" element={<div className="p-6">My Actions - Coming Soon</div>} />
                   <Route path="/admin/carers" element={<Carers />} />
                   <Route path="/admin/training" element={<div className="p-6">Training - Coming Soon</div>} />

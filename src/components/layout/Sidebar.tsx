@@ -11,6 +11,7 @@ import {
   MessageSquare,
   DollarSign,
   ShieldCheck,
+  MapPin,
 } from 'lucide-react';
 import {
   Sidebar as SidebarUI,
@@ -28,6 +29,7 @@ const adminMenuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
   { icon: Users, label: 'Clients', path: '/admin/clients' },
   { icon: Calendar, label: 'Scheduling', path: '/admin/scheduling' },
+  { icon: MapPin, label: 'Client Tracking', path: '/admin/client-tracking' },
   { icon: ClipboardList, label: 'My Actions', path: '/admin/actions' },
   { icon: UserCheck, label: 'Carers', path: '/admin/carers' },
   { icon: GraduationCap, label: 'Training', path: '/admin/training' },
