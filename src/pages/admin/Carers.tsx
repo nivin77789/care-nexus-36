@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Search, Mail, Phone, User, Lock, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Search, Mail, Phone, User, Lock, Pencil, Trash2, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,6 +10,7 @@ import { collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from '
 import { db } from '@/services/firebase';
 import { useFirebaseCollection } from '@/hooks/useFirebaseData';
 import toast from 'react-hot-toast';
+import CarerLocationMap from '@/components/CarerLocationMap';
 
 interface Carer {
   id: string;
@@ -18,6 +19,8 @@ interface Carer {
   phone: string;
   username: string;
   password?: string;
+  latitude?: number;
+  longitude?: number;
   createdAt: any;
 }
 
@@ -26,6 +29,7 @@ export default function Carers() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isMapDialogOpen, setIsMapDialogOpen] = useState(false);
   const [selectedCarer, setSelectedCarer] = useState<Carer | null>(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -245,6 +249,18 @@ export default function Carers() {
                   </div>
                 </div>
                 <div className="mt-4 flex gap-2">
+                  {carer.latitude && carer.longitude && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedCarer(carer);
+                        setIsMapDialogOpen(true);
+                      }}
+                    >
+                      <MapPin className="h-4 w-4" />
+                    </Button>
+                  )}
                   <Button
                     variant="outline"
                     size="sm"
@@ -366,6 +382,25 @@ export default function Carers() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        {/* Location Map Dialog */}
+        <Dialog open={isMapDialogOpen} onOpenChange={setIsMapDialogOpen}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-primary" />
+                {selectedCarer?.name}'s Location
+              </DialogTitle>
+            </DialogHeader>
+            {selectedCarer?.latitude && selectedCarer?.longitude && (
+              <CarerLocationMap
+                latitude={selectedCarer.latitude}
+                longitude={selectedCarer.longitude}
+                carerName={selectedCarer.name}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
       </motion.div>
     </div>
   );
