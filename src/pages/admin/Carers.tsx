@@ -83,13 +83,23 @@ export default function Carers() {
         return;
       }
 
-      await updateDoc(doc(db, 'carers', selectedCarer.id), {
+      const updateData: any = {
         name: selectedCarer.name,
         email: selectedCarer.email,
         phone: selectedCarer.phone,
         username: selectedCarer.username,
-        ...(selectedCarer.password && { password: selectedCarer.password }),
-      });
+      };
+
+      if (selectedCarer.password) {
+        updateData.password = selectedCarer.password;
+      }
+
+      if (selectedCarer.latitude !== undefined && selectedCarer.longitude !== undefined) {
+        updateData.latitude = selectedCarer.latitude;
+        updateData.longitude = selectedCarer.longitude;
+      }
+
+      await updateDoc(doc(db, 'carers', selectedCarer.id), updateData);
 
       toast.success('Carer updated successfully');
       setIsEditDialogOpen(false);
@@ -249,18 +259,17 @@ export default function Carers() {
                   </div>
                 </div>
                 <div className="mt-4 flex gap-2">
-                  {carer.latitude && carer.longitude && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setSelectedCarer(carer);
-                        setIsMapDialogOpen(true);
-                      }}
-                    >
-                      <MapPin className="h-4 w-4" />
-                    </Button>
-                  )}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedCarer(carer);
+                      setIsMapDialogOpen(true);
+                    }}
+                    title={carer.latitude && carer.longitude ? "View location" : "No location data"}
+                  >
+                    <MapPin className={`h-4 w-4 ${carer.latitude && carer.longitude ? 'text-primary' : 'text-muted-foreground'}`} />
+                  </Button>
                   <Button
                     variant="outline"
                     size="sm"
@@ -358,6 +367,31 @@ export default function Carers() {
                 </div>
               </div>
 
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-latitude">Latitude</Label>
+                  <Input
+                    id="edit-latitude"
+                    type="number"
+                    step="any"
+                    placeholder="e.g., 51.5074"
+                    value={selectedCarer?.latitude || ''}
+                    onChange={(e) => setSelectedCarer(selectedCarer ? { ...selectedCarer, latitude: parseFloat(e.target.value) || undefined } : null)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-longitude">Longitude</Label>
+                  <Input
+                    id="edit-longitude"
+                    type="number"
+                    step="any"
+                    placeholder="e.g., -0.1278"
+                    value={selectedCarer?.longitude || ''}
+                    onChange={(e) => setSelectedCarer(selectedCarer ? { ...selectedCarer, longitude: parseFloat(e.target.value) || undefined } : null)}
+                  />
+                </div>
+              </div>
+
               <Button type="submit" className="w-full bg-gradient-primary">
                 Update Carer
               </Button>
@@ -392,12 +426,29 @@ export default function Carers() {
                 {selectedCarer?.name}'s Location
               </DialogTitle>
             </DialogHeader>
-            {selectedCarer?.latitude && selectedCarer?.longitude && (
+            {selectedCarer?.latitude && selectedCarer?.longitude ? (
               <CarerLocationMap
                 latitude={selectedCarer.latitude}
                 longitude={selectedCarer.longitude}
                 carerName={selectedCarer.name}
               />
+            ) : (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <MapPin className="h-16 w-16 text-muted-foreground mb-4" />
+                <h3 className="text-lg font-semibold mb-2">No Location Data</h3>
+                <p className="text-muted-foreground mb-4">
+                  This carer hasn't set their location yet.
+                </p>
+                <Button
+                  onClick={() => {
+                    setIsMapDialogOpen(false);
+                    setIsEditDialogOpen(true);
+                  }}
+                  className="bg-gradient-primary"
+                >
+                  Add Location
+                </Button>
+              </div>
             )}
           </DialogContent>
         </Dialog>
