@@ -34,6 +34,7 @@ const adminMenuItems = [
   { icon: UserCheck, label: 'Carers', path: '/admin/carers' },
   { icon: GraduationCap, label: 'Training', path: '/admin/training' },
   { icon: MessageSquare, label: 'Messages', path: '/admin/messages' },
+  { icon: MessageSquare, label: 'Feedback', path: '/admin/feedback' },
   { icon: FileText, label: 'Reports', path: '/admin/reports' },
   { icon: DollarSign, label: 'Finance', path: '/admin/finance' },
   { icon: ShieldCheck, label: 'Policies', path: '/admin/policies' },

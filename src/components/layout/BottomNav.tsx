@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Calendar, Home, MessageSquare, User } from 'lucide-react';
+import { Calendar, Home, MessageSquare, User, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -7,6 +7,7 @@ const caretakerMenuItems = [
   { icon: Home, label: 'My Day', path: '/caretaker/my-day' },
   { icon: Calendar, label: 'Visits', path: '/caretaker/visits' },
   { icon: MessageSquare, label: 'Messages', path: '/caretaker/messages' },
+  { icon: MessageCircle, label: 'Feedback', path: '/caretaker/feedback' },
   { icon: User, label: 'Profile', path: '/caretaker/profile' },
 ];
 

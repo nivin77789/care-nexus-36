@@ -16,6 +16,7 @@ import CarerLogin from '@/pages/auth/CarerLogin';
 import MyDay from '@/pages/caretaker/MyDay';
 import Visits from '@/pages/caretaker/Visits';
 import CaretakerMessages from '@/pages/caretaker/Messages';
+import CaretakerFeedback from '@/pages/caretaker/Feedback';
 import Profile from '@/pages/caretaker/Profile';
 
 // Admin pages
@@ -25,6 +26,7 @@ import Scheduling from '@/pages/admin/Scheduling';
 import ClientTracking from '@/pages/admin/ClientTracking';
 import Carers from '@/pages/admin/Carers';
 import AdminMessages from '@/pages/admin/Messages';
+import AdminFeedback from '@/pages/admin/Feedback';
 
 const App = () => {
   const { user, role, setUser, setRole, setLoading } = useAuthStore();
@@ -83,6 +85,7 @@ const App = () => {
                   <Route path="/admin/carers" element={<Carers />} />
                   <Route path="/admin/training" element={<div className="p-6">Training - Coming Soon</div>} />
                   <Route path="/admin/messages" element={<AdminMessages />} />
+                  <Route path="/admin/feedback" element={<AdminFeedback />} />
                   <Route path="/admin/reports" element={<div className="p-6">Reports - Coming Soon</div>} />
                   <Route path="/admin/finance" element={<div className="p-6">Finance - Coming Soon</div>} />
                   <Route path="/admin/policies" element={<div className="p-6">Policies - Coming Soon</div>} />
@@ -108,6 +111,7 @@ const App = () => {
             <Route path="/caretaker/my-day" element={<MyDay />} />
             <Route path="/caretaker/visits" element={<Visits />} />
             <Route path="/caretaker/messages" element={<CaretakerMessages />} />
+            <Route path="/caretaker/feedback" element={<CaretakerFeedback />} />
             <Route path="/caretaker/profile" element={<Profile />} />
             <Route path="*" element={<Navigate to="/caretaker/my-day" replace />} />
           </Routes>
