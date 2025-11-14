@@ -13,6 +13,7 @@ import { BottomNav } from '@/components/layout/BottomNav';
 import AdminLogin from '@/pages/auth/AdminLogin';
 import SuperAdminLogin from '@/pages/auth/SuperAdminLogin';
 import CarerLogin from '@/pages/auth/CarerLogin';
+import ClientLogin from '@/pages/auth/ClientLogin';
 
 // Caretaker pages
 import Index from '@/pages/Index';
@@ -30,16 +31,21 @@ import ClientTracking from '@/pages/admin/ClientTracking';
 import Carers from '@/pages/admin/Carers';
 import AdminMessages from '@/pages/admin/Messages';
 import AdminFeedback from '@/pages/admin/Feedback';
+import ManageClients from '@/pages/admin/ManageClients';
 
 // Super Admin pages
 import SuperAdminDashboard from '@/pages/superadmin/Dashboard';
 import ManageAdmins from '@/pages/superadmin/ManageAdmins';
+import SuperAdminManageClients from '@/pages/superadmin/ManageClients';
 import SuperAdminCarers from '@/pages/superadmin/Carers';
 import SuperAdminClients from '@/pages/superadmin/Clients';
 import SuperAdminScheduling from '@/pages/superadmin/Scheduling';
 import SuperAdminClientTracking from '@/pages/superadmin/ClientTracking';
 import SuperAdminMessages from '@/pages/superadmin/Messages';
 import SuperAdminFeedback from '@/pages/superadmin/Feedback';
+
+// Client pages
+import ClientDashboard from '@/pages/client/Dashboard';
 
 const App = () => {
   const { user, role, setUser, setRole, setLoading } = useAuthStore();
@@ -74,6 +80,7 @@ const App = () => {
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/superadmin/login" element={<SuperAdminLogin />} />
           <Route path="/carer/login" element={<CarerLogin />} />
+          <Route path="/client/login" element={<ClientLogin />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
@@ -94,6 +101,7 @@ const App = () => {
                 <Routes>
                   <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
                   <Route path="/superadmin/manage-admins" element={<ManageAdmins />} />
+                  <Route path="/superadmin/manage-clients" element={<SuperAdminManageClients />} />
                   <Route path="/superadmin/carers" element={<SuperAdminCarers />} />
                   <Route path="/superadmin/clients" element={<SuperAdminClients />} />
                   <Route path="/superadmin/scheduling" element={<SuperAdminScheduling />} />
@@ -124,6 +132,7 @@ const App = () => {
                 <Routes>
                   <Route path="/admin/dashboard" element={<Dashboard />} />
                   <Route path="/admin/clients" element={<Clients />} />
+                  <Route path="/admin/manage-clients" element={<ManageClients />} />
                   <Route path="/admin/scheduling" element={<Scheduling />} />
                   <Route path="/admin/client-tracking" element={<ClientTracking />} />
                   <Route path="/admin/actions" element={<div className="p-6">My Actions - Coming Soon</div>} />
@@ -141,6 +150,19 @@ const App = () => {
             </div>
           </div>
         </SidebarProvider>
+      </BrowserRouter>
+    );
+  }
+
+  // Client Layout
+  if (role === 'client') {
+    return (
+      <BrowserRouter>
+        <Toaster position="top-center" />
+        <Routes>
+          <Route path="/client/dashboard" element={<ClientDashboard />} />
+          <Route path="*" element={<Navigate to="/client/dashboard" replace />} />
+        </Routes>
       </BrowserRouter>
     );
   }

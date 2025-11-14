@@ -12,6 +12,7 @@ import {
   DollarSign,
   ShieldCheck,
   MapPin,
+  UserCog,
 } from 'lucide-react';
 import {
   Sidebar as SidebarUI,
@@ -28,6 +29,7 @@ import {
 const adminMenuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
   { icon: Users, label: 'Clients', path: '/admin/clients' },
+  { icon: UserCog, label: 'Manage Client Accounts', path: '/admin/manage-clients' },
   { icon: Calendar, label: 'Scheduling', path: '/admin/scheduling' },
   { icon: MapPin, label: 'Client Tracking', path: '/admin/client-tracking' },
   { icon: ClipboardList, label: 'My Actions', path: '/admin/actions' },
