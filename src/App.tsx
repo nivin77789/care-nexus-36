@@ -6,13 +6,16 @@ import { useThemeStore } from '@/store/themeStore';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
+import { SuperAdminSidebar } from '@/components/layout/SuperAdminSidebar';
 import { BottomNav } from '@/components/layout/BottomNav';
 
 // Auth
 import AdminLogin from '@/pages/auth/AdminLogin';
+import SuperAdminLogin from '@/pages/auth/SuperAdminLogin';
 import CarerLogin from '@/pages/auth/CarerLogin';
 
 // Caretaker pages
+import Index from '@/pages/Index';
 import MyDay from '@/pages/caretaker/MyDay';
 import Visits from '@/pages/caretaker/Visits';
 import CaretakerMessages from '@/pages/caretaker/Messages';
@@ -27,6 +30,16 @@ import ClientTracking from '@/pages/admin/ClientTracking';
 import Carers from '@/pages/admin/Carers';
 import AdminMessages from '@/pages/admin/Messages';
 import AdminFeedback from '@/pages/admin/Feedback';
+
+// Super Admin pages
+import SuperAdminDashboard from '@/pages/superadmin/Dashboard';
+import ManageAdmins from '@/pages/superadmin/ManageAdmins';
+import SuperAdminCarers from '@/pages/superadmin/Carers';
+import SuperAdminClients from '@/pages/superadmin/Clients';
+import SuperAdminScheduling from '@/pages/superadmin/Scheduling';
+import SuperAdminClientTracking from '@/pages/superadmin/ClientTracking';
+import SuperAdminMessages from '@/pages/superadmin/Messages';
+import SuperAdminFeedback from '@/pages/superadmin/Feedback';
 
 const App = () => {
   const { user, role, setUser, setRole, setLoading } = useAuthStore();
@@ -57,10 +70,42 @@ const App = () => {
       <BrowserRouter>
         <Toaster position="top-center" />
         <Routes>
+          <Route path="/" element={<Index />} />
           <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/superadmin/login" element={<SuperAdminLogin />} />
           <Route path="/carer/login" element={<CarerLogin />} />
-          <Route path="*" element={<Navigate to="/admin/login" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+      </BrowserRouter>
+    );
+  }
+
+  // Super Admin Layout
+  if (role === 'superadmin') {
+    return (
+      <BrowserRouter>
+        <Toaster position="top-center" />
+        <SidebarProvider defaultOpen={true}>
+          <div className="flex min-h-screen w-full flex-col">
+            <Navbar />
+            <div className="flex flex-1 w-full">
+              <SuperAdminSidebar />
+              <main className="flex-1 overflow-y-auto bg-background">
+                <Routes>
+                  <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
+                  <Route path="/superadmin/manage-admins" element={<ManageAdmins />} />
+                  <Route path="/superadmin/carers" element={<SuperAdminCarers />} />
+                  <Route path="/superadmin/clients" element={<SuperAdminClients />} />
+                  <Route path="/superadmin/scheduling" element={<SuperAdminScheduling />} />
+                  <Route path="/superadmin/client-tracking" element={<SuperAdminClientTracking />} />
+                  <Route path="/superadmin/messages" element={<SuperAdminMessages />} />
+                  <Route path="/superadmin/feedback" element={<SuperAdminFeedback />} />
+                  <Route path="*" element={<Navigate to="/superadmin/dashboard" replace />} />
+                </Routes>
+              </main>
+            </div>
+          </div>
+        </SidebarProvider>
       </BrowserRouter>
     );
   }

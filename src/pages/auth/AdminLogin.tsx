@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '@/services/firebase';
 import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,6 +24,7 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
+      // Check hardcoded admin
       if (username === ADMIN_USER.username && password === ADMIN_USER.password) {
         const mockUser = { uid: ADMIN_USER.username, email: `${ADMIN_USER.username}@care.com` };
         setUser(mockUser);
@@ -29,9 +32,30 @@ export default function AdminLogin() {
         localStorage.setItem('auth-user', JSON.stringify({ user: mockUser, role: 'admin' }));
         toast.success('Welcome back, Admin!');
         navigate('/admin/dashboard');
-      } else {
-        toast.error('Invalid admin credentials');
+        return;
       }
+
+      // Check database for dynamically created admins
+      const adminsRef = collection(db, 'admins');
+      const q = query(adminsRef, where('username', '==', username));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const adminDoc = querySnapshot.docs[0];
+        const adminData = adminDoc.data();
+
+        if (adminData.password === password) {
+          const mockUser = { uid: adminDoc.id, email: `${username}@care.com` };
+          setUser(mockUser);
+          setRole('admin');
+          localStorage.setItem('auth-user', JSON.stringify({ user: mockUser, role: 'admin' }));
+          toast.success('Welcome back, Admin!');
+          navigate('/admin/dashboard');
+          return;
+        }
+      }
+
+      toast.error('Invalid admin credentials');
     } catch (error: any) {
       console.error('Login error:', error);
       toast.error('Failed to login');
