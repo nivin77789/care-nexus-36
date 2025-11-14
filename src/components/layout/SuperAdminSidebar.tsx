@@ -43,6 +43,11 @@ const superAdminMenuItems = [
     path: '/superadmin/clients',
   },
   {
+    icon: Users,
+    label: 'Manage Client Accounts',
+    path: '/superadmin/manage-clients',
+  },
+  {
     icon: CalendarCheck,
     label: 'Scheduling',
     path: '/superadmin/scheduling',

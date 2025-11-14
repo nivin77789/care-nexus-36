@@ -16,7 +16,7 @@ const Index = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-4 gap-6">
           <Card className="hover:shadow-lg transition-shadow">
             <CardHeader className="text-center">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -46,6 +46,23 @@ const Index = () => {
               <Link to="/admin/login">
                 <Button className="w-full">
                   Access Admin Portal
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader className="text-center">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Heart className="w-8 h-8 text-primary" />
+              </div>
+              <CardTitle>Client Portal</CardTitle>
+              <CardDescription>View your care schedule</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Link to="/client/login">
+                <Button className="w-full">
+                  Access Client Portal
                 </Button>
               </Link>
             </CardContent>
