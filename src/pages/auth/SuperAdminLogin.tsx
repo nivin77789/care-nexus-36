@@ -9,8 +9,8 @@ import { useAuthStore } from '@/store/authStore';
 import { toast } from 'sonner';
 
 const SUPER_ADMIN_USER = {
-  username: 'super',
-  password: 'super',
+  username: 'superadmin',
+  password: 'superadmin',
   role: 'superadmin' as const,
 };
 
@@ -49,12 +49,51 @@ export default function SuperAdminLogin() {
         className="w-full max-w-md"
       >
         <div className="bg-card/50 backdrop-blur-sm border border-border rounded-lg shadow-lg p-8">
-          <div className="flex flex-col items-center mb-8">
+          <div className="mb-6 flex flex-wrap justify-center gap-2">
+            <Button
+              variant="default"
+              size="sm"
+              className="text-xs shadow-glow"
+            >
+              Super Admin
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/admin/login')}
+              className="text-xs"
+            >
+              Admin
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/carer/login')}
+              className="text-xs"
+            >
+              Carer
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/client/login')}
+              className="text-xs"
+            >
+              Client
+            </Button>
+          </div>
+
+          <div className="flex flex-col items-center mb-6">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
               <Shield className="w-8 h-8 text-primary" />
             </div>
             <h1 className="text-2xl font-bold text-foreground">Super Admin Login</h1>
             <p className="text-muted-foreground text-sm mt-2">Access master control panel</p>
+
+            <div className="mt-4 rounded-lg bg-primary/5 p-3 border border-primary/10 w-full text-center">
+              <p className="text-xs font-semibold text-primary">Demo Credentials</p>
+              <p className="text-xs text-muted-foreground">Username: superadmin • Password: superadmin</p>
+            </div>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">

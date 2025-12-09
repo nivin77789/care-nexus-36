@@ -22,6 +22,21 @@ export default function CarerLogin() {
     setLoading(true);
 
     try {
+      // Hardcoded demo check
+      if (username === 'nivin77789' && password === 'Nivin77789@') {
+        const mockUser = {
+          uid: 'demo-carer-id',
+          email: 'nivin77789@care.com',
+          name: 'Nivin Mathews'
+        };
+        setUser(mockUser);
+        setRole('caretaker');
+        localStorage.setItem('auth-user', JSON.stringify({ user: mockUser, role: 'caretaker' }));
+        toast.success(`Welcome back, ${mockUser.name}!`);
+        navigate('/caretaker/my-day');
+        return;
+      }
+
       const carersRef = collection(db, 'carers');
       const q = query(carersRef, where('username', '==', username));
       const querySnapshot = await getDocs(q);
@@ -31,10 +46,10 @@ export default function CarerLogin() {
         const carerData = carerDoc.data();
 
         if (carerData.password === password) {
-          const mockUser = { 
-            uid: carerDoc.id, 
+          const mockUser = {
+            uid: carerDoc.id,
             email: carerData.email,
-            name: carerData.name 
+            name: carerData.name
           };
           setUser(mockUser);
           setRole('caretaker');
@@ -63,7 +78,41 @@ export default function CarerLogin() {
         className="w-full max-w-md"
       >
         <div className="rounded-2xl bg-card p-8 shadow-strong">
-          <div className="mb-8 text-center">
+          <div className="mb-6 flex flex-wrap justify-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/superadmin/login')}
+              className="text-xs"
+            >
+              Super Admin
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/admin/login')}
+              className="text-xs"
+            >
+              Admin
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
+              className="text-xs shadow-glow"
+            >
+              Carer
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/client/login')}
+              className="text-xs"
+            >
+              Client
+            </Button>
+          </div>
+
+          <div className="mb-6 text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-primary shadow-glow">
               <Heart className="h-8 w-8 text-primary-foreground" />
             </div>
@@ -71,6 +120,11 @@ export default function CarerLogin() {
             <p className="mt-2 text-sm text-muted-foreground">
               Sign in to your carer account
             </p>
+
+            <div className="mt-4 rounded-lg bg-primary/5 p-3 border border-primary/10">
+              <p className="text-xs font-semibold text-primary">Demo Credentials</p>
+              <p className="text-xs text-muted-foreground">Username: nivin77789 • Password: Nivin77789@</p>
+            </div>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">

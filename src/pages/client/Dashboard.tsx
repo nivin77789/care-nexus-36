@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore';
 import { db } from '@/services/firebase';
 import { useAuthStore } from '@/store/authStore';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, User, MapPin, Phone, Heart, Loader2 } from 'lucide-react';
+import { Calendar, Clock, User, MapPin, Phone, Heart, Loader2, LogOut } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -23,9 +26,16 @@ interface Visit {
 }
 
 export default function ClientDashboard() {
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
+  const navigate = useNavigate();
   const [visits, setVisits] = useState<Visit[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const handleLogout = () => {
+    logout();
+    toast.success('Logged out successfully');
+    navigate('/');
+  };
 
   useEffect(() => {
     if (!user?.uid) return;
@@ -100,7 +110,13 @@ export default function ClientDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 p-4 md:p-8 relative">
+      <div className="absolute top-4 right-4">
+        <Button variant="outline" size="sm" onClick={handleLogout} className="bg-background/50 backdrop-blur-sm">
+          <LogOut className="w-4 h-4 mr-2" />
+          Logout
+        </Button>
+      </div>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

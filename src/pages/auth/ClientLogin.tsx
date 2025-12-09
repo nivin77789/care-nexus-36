@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase';
 import { motion } from 'framer-motion';
@@ -22,6 +22,22 @@ export default function ClientLogin() {
     setLoading(true);
 
     try {
+      // Hardcoded demo check
+      if (username === 'varun77789' && password === 'Varun77789@') {
+        const user = {
+          uid: 'demo-client-id',
+          username: 'varun77789',
+          name: 'Varun Sharma',
+          email: 'varun77789@care.com'
+        };
+        setUser(user);
+        setRole('client');
+        localStorage.setItem('auth-user', JSON.stringify({ user, role: 'client' }));
+        toast.success(`Welcome back, ${user.name}!`);
+        navigate('/client/dashboard');
+        return;
+      }
+
       const clientsRef = collection(db, 'clients');
       const q = query(clientsRef, where('username', '==', username));
       const querySnapshot = await getDocs(q);
@@ -31,8 +47,8 @@ export default function ClientLogin() {
         const clientData = clientDoc.data();
 
         if (clientData.password === password) {
-          const user = { 
-            uid: clientDoc.id, 
+          const user = {
+            uid: clientDoc.id,
             username: clientData.username,
             name: clientData.name,
             email: clientData.email || `${username}@care.com`
@@ -63,12 +79,51 @@ export default function ClientLogin() {
         className="w-full max-w-md"
       >
         <div className="bg-card/50 backdrop-blur-sm border border-border rounded-lg shadow-lg p-8">
-          <div className="flex flex-col items-center mb-8">
+          <div className="mb-6 flex flex-wrap justify-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/superadmin/login')}
+              className="text-xs"
+            >
+              Super Admin
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/admin/login')}
+              className="text-xs"
+            >
+              Admin
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/carer/login')}
+              className="text-xs"
+            >
+              Carer
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
+              className="text-xs shadow-glow"
+            >
+              Client
+            </Button>
+          </div>
+
+          <div className="flex flex-col items-center mb-6">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
               <Heart className="w-8 h-8 text-primary" />
             </div>
             <h1 className="text-2xl font-bold text-foreground">Client Portal</h1>
             <p className="text-muted-foreground text-sm mt-2">View your care schedule</p>
+
+            <div className="mt-4 rounded-lg bg-primary/5 p-3 border border-primary/10 w-full text-center">
+              <p className="text-xs font-semibold text-primary">Demo Credentials</p>
+              <p className="text-xs text-muted-foreground">Username: varun77789 • Password: Varun77789@</p>
+            </div>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
@@ -117,6 +172,13 @@ export default function ClientLogin() {
                 </>
               )}
             </Button>
+
+            <div className="text-center text-sm text-muted-foreground mt-4">
+              Don't have an account?{' '}
+              <Link to="/client/signup" className="text-primary hover:underline font-medium">
+                Sign Up
+              </Link>
+            </div>
           </form>
         </div>
       </motion.div>

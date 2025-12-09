@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 import { Loader2, Lock, User, Shield } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const ADMIN_USER = { username: 'admin', password: 'admin123', role: 'admin' };
+const ADMIN_USER = { username: 'admin', password: 'admin', role: 'admin' };
 
 export default function AdminLogin() {
   const [username, setUsername] = useState('');
@@ -72,7 +72,41 @@ export default function AdminLogin() {
         className="w-full max-w-md"
       >
         <div className="rounded-2xl bg-card p-8 shadow-strong">
-          <div className="mb-8 text-center">
+          <div className="mb-6 flex flex-wrap justify-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/superadmin/login')}
+              className="text-xs"
+            >
+              Super Admin
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
+              className="text-xs shadow-glow"
+            >
+              Admin
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/carer/login')}
+              className="text-xs"
+            >
+              Carer
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/client/login')}
+              className="text-xs"
+            >
+              Client
+            </Button>
+          </div>
+
+          <div className="mb-6 text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-primary shadow-glow">
               <Shield className="h-8 w-8 text-primary-foreground" />
             </div>
@@ -80,6 +114,11 @@ export default function AdminLogin() {
             <p className="mt-2 text-sm text-muted-foreground">
               Sign in to your admin account
             </p>
+
+            <div className="mt-4 rounded-lg bg-primary/5 p-3 border border-primary/10">
+              <p className="text-xs font-semibold text-primary">Demo Credentials</p>
+              <p className="text-xs text-muted-foreground">Username: admin • Password: admin</p>
+            </div>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">

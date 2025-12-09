@@ -38,7 +38,7 @@ export default function Login() {
 
       // Set mock user object
       const mockUser = { uid: user.username, email: `${user.username}@care.com` } as any;
-      
+
       setUser(mockUser);
       setRole(user.role);
       localStorage.setItem('auth-user', JSON.stringify({ user: mockUser, role: user.role }));
