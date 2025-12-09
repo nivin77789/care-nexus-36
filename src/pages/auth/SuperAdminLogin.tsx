@@ -30,7 +30,7 @@ export default function SuperAdminLogin() {
         const user = { username: SUPER_ADMIN_USER.username, role: SUPER_ADMIN_USER.role };
         setUser(user);
         setRole(SUPER_ADMIN_USER.role);
-        sessionStorage.setItem('auth-user', JSON.stringify(user));
+        sessionStorage.setItem('auth-user', JSON.stringify({ user, role: SUPER_ADMIN_USER.role }));
         toast.success('Welcome, Super Admin!');
         navigate('/superadmin/dashboard');
       } else {

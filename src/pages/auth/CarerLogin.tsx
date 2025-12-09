@@ -22,20 +22,8 @@ export default function CarerLogin() {
     setLoading(true);
 
     try {
-      // Hardcoded demo check
-      if (username === 'nivin77789' && password === 'Nivin77789@') {
-        const mockUser = {
-          uid: 'demo-carer-id',
-          email: 'nivin77789@care.com',
-          name: 'Nivin Mathews'
-        };
-        setUser(mockUser);
-        setRole('caretaker');
-        sessionStorage.setItem('auth-user', JSON.stringify({ user: mockUser, role: 'caretaker' }));
-        toast.success(`Welcome back, ${mockUser.name}!`);
-        navigate('/caretaker/my-day');
-        return;
-      }
+      // Hardcoded demo check removed to ensure real Firestore UID is used
+      // if (username === 'nivin77789' && password === 'Nivin77789@') { ... }
 
       const carersRef = collection(db, 'carers');
       const q = query(carersRef, where('username', '==', username));
@@ -123,7 +111,7 @@ export default function CarerLogin() {
 
             <div className="mt-4 rounded-lg bg-primary/5 p-3 border border-primary/10">
               <p className="text-xs font-semibold text-primary">Demo Credentials</p>
-              <p className="text-xs text-muted-foreground">Username: nivin77789 • Password: Nivin77789@</p>
+              <p className="text-xs text-muted-foreground">Username: nithin • Password: nithin</p>
             </div>
           </div>
 

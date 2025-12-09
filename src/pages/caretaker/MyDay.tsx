@@ -34,17 +34,19 @@ export default function MyDay() {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
+    console.log('Setting up MyDay listener for user:', user.uid); // Debug log
     const visitsQuery = query(
       collection(db, 'visits'),
       where('carerId', '==', user.uid)
     );
 
     const unsubscribe = onSnapshot(
-      visitsQuery, 
+      visitsQuery,
       (snapshot) => {
         const visitsData = snapshot.docs
           .map((doc) => {
             const data = doc.data();
+            console.log('Processing visit:', doc.id, data); // Debug log
             const scheduledTime = data.scheduledDate.toDate();
             return {
               id: doc.id,
@@ -58,10 +60,11 @@ export default function MyDay() {
             };
           })
           .filter((visit) => {
-            return visit.scheduledTime >= today && visit.scheduledTime < tomorrow;
+            console.log('Filtering visit:', visit.id, 'Time:', visit.scheduledTime, 'Today:', today, 'Keep:', visit.scheduledTime >= today); // Debug log
+            return visit.scheduledTime >= today;
           })
           .sort((a, b) => a.scheduledTime.getTime() - b.scheduledTime.getTime());
-        
+
         setVisits(visitsData);
         setLoading(false);
       },
@@ -137,19 +140,18 @@ export default function MyDay() {
               {/* Status Badge */}
               <div className="mb-3 flex items-center justify-between">
                 <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${
-                    visit.status === 'completed'
-                      ? 'bg-secondary/10 text-secondary'
-                      : visit.status === 'in-progress'
+                  className={`rounded-full px-3 py-1 text-xs font-medium ${visit.status === 'completed'
+                    ? 'bg-secondary/10 text-secondary'
+                    : visit.status === 'in-progress'
                       ? 'bg-warning/10 text-warning'
                       : 'bg-primary/10 text-primary'
-                  }`}
+                    }`}
                 >
                   {visit.status === 'completed'
                     ? 'Completed'
                     : visit.status === 'in-progress'
-                    ? 'In Progress'
-                    : 'Scheduled'}
+                      ? 'In Progress'
+                      : 'Scheduled'}
                 </span>
                 <span className="text-xs text-muted-foreground">
                   {visit.duration} mins

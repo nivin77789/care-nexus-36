@@ -22,21 +22,8 @@ export default function ClientLogin() {
     setLoading(true);
 
     try {
-      // Hardcoded demo check
-      if (username === 'varun77789' && password === 'Varun77789@') {
-        const user = {
-          uid: 'demo-client-id',
-          username: 'varun77789',
-          name: 'Varun Sharma',
-          email: 'varun77789@care.com'
-        };
-        setUser(user);
-        setRole('client');
-        sessionStorage.setItem('auth-user', JSON.stringify({ user, role: 'client' }));
-        toast.success(`Welcome back, ${user.name}!`);
-        navigate('/client/dashboard');
-        return;
-      }
+      // Hardcoded demo check removed to ensure we use the real Firestore ID for scheduling linkage
+      // if (username === 'varun77789' && password === 'Varun77789@') { ... }
 
       const clientsRef = collection(db, 'clients');
       const q = query(clientsRef, where('username', '==', username));
@@ -122,7 +109,7 @@ export default function ClientLogin() {
 
             <div className="mt-4 rounded-lg bg-primary/5 p-3 border border-primary/10 w-full text-center">
               <p className="text-xs font-semibold text-primary">Demo Credentials</p>
-              <p className="text-xs text-muted-foreground">Username: varun77789 • Password: Varun77789@</p>
+              <p className="text-xs text-muted-foreground">Username: client77789 • Password: client77789</p>
             </div>
           </div>
 

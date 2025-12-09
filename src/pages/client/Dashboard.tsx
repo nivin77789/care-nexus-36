@@ -18,11 +18,11 @@ interface Visit {
   carerId: string;
   carerName: string;
   carerPhone?: string;
-  date: any;
+  scheduledDate: any;
   time: string;
   status: 'scheduled' | 'in-progress' | 'completed' | 'cancelled';
   notes?: string;
-  address?: string;
+  clientAddress?: string;
 }
 
 export default function ClientDashboard() {
@@ -43,8 +43,7 @@ export default function ClientDashboard() {
     const visitsRef = collection(db, 'visits');
     const q = query(
       visitsRef,
-      where('clientId', '==', user.uid),
-      orderBy('date', 'asc')
+      where('clientId', '==', user.uid)
     );
 
     const unsubscribe = onSnapshot(
@@ -55,12 +54,24 @@ export default function ClientDashboard() {
           ...doc.data(),
         })) as Visit[];
 
-        // Filter for upcoming and today's visits
+        // Filter for upcoming and today's visits (comparing dates only, ignoring time)
         const now = new Date();
-        const upcoming = visitsData.filter((visit) => {
-          const visitDate = visit.date?.toDate();
-          return visitDate >= now || visit.status === 'in-progress';
-        });
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+        const upcoming = visitsData
+          .filter((visit) => {
+            const visitDate = visit.scheduledDate?.toDate();
+            // Reset time part of visit date for comparison if we want to show all of today's visits
+            const visitDay = new Date(visitDate.getFullYear(), visitDate.getMonth(), visitDate.getDate());
+
+            return visitDay >= startOfToday || visit.status === 'in-progress';
+          })
+          .sort((a, b) => {
+            // Sort by date ascending
+            const dateA = a.scheduledDate?.toDate().getTime() || 0;
+            const dateB = b.scheduledDate?.toDate().getTime() || 0;
+            return dateA - dateB;
+          });
 
         setVisits(upcoming);
         setLoading(false);
@@ -184,7 +195,7 @@ export default function ClientDashboard() {
                         </div>
                         <div>
                           <p className="text-sm text-muted-foreground">Date</p>
-                          <p className="font-medium">{formatDate(visit.date)}</p>
+                          <p className="font-medium">{formatDate(visit.scheduledDate)}</p>
                         </div>
                       </div>
 
@@ -210,14 +221,14 @@ export default function ClientDashboard() {
                         </div>
                       )}
 
-                      {visit.address && (
+                      {visit.clientAddress && (
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
                             <MapPin className="w-5 h-5 text-primary" />
                           </div>
                           <div>
                             <p className="text-sm text-muted-foreground">Location</p>
-                            <p className="font-medium text-sm">{visit.address}</p>
+                            <p className="font-medium text-sm">{visit.clientAddress}</p>
                           </div>
                         </div>
                       )}
