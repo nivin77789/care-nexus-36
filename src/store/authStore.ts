@@ -21,6 +21,6 @@ export const useAuthStore = create<AuthState>((set) => ({
   setLoading: (loading) => set({ loading }),
   logout: () => {
     set({ user: null, role: null });
-    localStorage.removeItem('auth-user');
+    sessionStorage.removeItem('auth-user');
   },
 }));

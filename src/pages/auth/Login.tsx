@@ -41,7 +41,7 @@ export default function Login() {
 
       setUser(mockUser);
       setRole(user.role);
-      localStorage.setItem('auth-user', JSON.stringify({ user: mockUser, role: user.role }));
+      sessionStorage.setItem('auth-user', JSON.stringify({ user: mockUser, role: user.role }));
 
       toast.success('Welcome back!');
 

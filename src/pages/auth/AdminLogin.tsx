@@ -29,7 +29,7 @@ export default function AdminLogin() {
         const mockUser = { uid: ADMIN_USER.username, email: `${ADMIN_USER.username}@care.com` };
         setUser(mockUser);
         setRole('admin');
-        localStorage.setItem('auth-user', JSON.stringify({ user: mockUser, role: 'admin' }));
+        sessionStorage.setItem('auth-user', JSON.stringify({ user: mockUser, role: 'admin' }));
         toast.success('Welcome back, Admin!');
         navigate('/admin/dashboard');
         return;
@@ -48,7 +48,7 @@ export default function AdminLogin() {
           const mockUser = { uid: adminDoc.id, email: `${username}@care.com` };
           setUser(mockUser);
           setRole('admin');
-          localStorage.setItem('auth-user', JSON.stringify({ user: mockUser, role: 'admin' }));
+          sessionStorage.setItem('auth-user', JSON.stringify({ user: mockUser, role: 'admin' }));
           toast.success('Welcome back, Admin!');
           navigate('/admin/dashboard');
           return;

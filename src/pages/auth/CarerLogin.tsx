@@ -31,7 +31,7 @@ export default function CarerLogin() {
         };
         setUser(mockUser);
         setRole('caretaker');
-        localStorage.setItem('auth-user', JSON.stringify({ user: mockUser, role: 'caretaker' }));
+        sessionStorage.setItem('auth-user', JSON.stringify({ user: mockUser, role: 'caretaker' }));
         toast.success(`Welcome back, ${mockUser.name}!`);
         navigate('/caretaker/my-day');
         return;
@@ -53,7 +53,7 @@ export default function CarerLogin() {
           };
           setUser(mockUser);
           setRole('caretaker');
-          localStorage.setItem('auth-user', JSON.stringify({ user: mockUser, role: 'caretaker' }));
+          sessionStorage.setItem('auth-user', JSON.stringify({ user: mockUser, role: 'caretaker' }));
           toast.success(`Welcome back, ${carerData.name}!`);
           navigate('/caretaker/my-day');
         } else {

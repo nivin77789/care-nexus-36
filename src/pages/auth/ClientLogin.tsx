@@ -32,7 +32,7 @@ export default function ClientLogin() {
         };
         setUser(user);
         setRole('client');
-        localStorage.setItem('auth-user', JSON.stringify({ user, role: 'client' }));
+        sessionStorage.setItem('auth-user', JSON.stringify({ user, role: 'client' }));
         toast.success(`Welcome back, ${user.name}!`);
         navigate('/client/dashboard');
         return;
@@ -55,7 +55,7 @@ export default function ClientLogin() {
           };
           setUser(user);
           setRole('client');
-          localStorage.setItem('auth-user', JSON.stringify({ user, role: 'client' }));
+          sessionStorage.setItem('auth-user', JSON.stringify({ user, role: 'client' }));
           toast.success(`Welcome back, ${clientData.name}!`);
           navigate('/client/dashboard');
           return;

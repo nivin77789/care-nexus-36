@@ -63,8 +63,8 @@ const App = () => {
   }, [setTheme]);
 
   useEffect(() => {
-    // Check localStorage for saved auth
-    const savedAuth = localStorage.getItem('auth-user');
+    // Check sessionStorage for saved auth
+    const savedAuth = sessionStorage.getItem('auth-user');
     if (savedAuth) {
       const { user, role } = JSON.parse(savedAuth);
       setUser(user);
