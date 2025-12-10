@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react';
 import { collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, doc, Timestamp, where } from 'firebase/firestore';
 import { db } from '@/services/firebase';
 import { motion } from 'framer-motion';
-import { CalendarPlus, Calendar, Clock, User, Pencil, Trash2 } from 'lucide-react';
+import { CalendarPlus, Calendar as CalendarIcon, Clock, User, Pencil, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { format, addDays, startOfDay } from 'date-fns';
@@ -28,7 +31,7 @@ export default function Scheduling() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedVisit, setSelectedVisit] = useState<Visit | null>(null);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [newVisit, setNewVisit] = useState({
     clientId: '',
     carerId: '',
@@ -43,6 +46,7 @@ export default function Scheduling() {
     time: '',
     duration: 60,
   });
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   useEffect(() => {
     // Load visits
@@ -81,9 +85,19 @@ export default function Scheduling() {
     };
   }, []);
 
+  // Update newVisit date when dialog opens or selectedDate changes
+  useEffect(() => {
+    if (isAddDialogOpen) {
+      setNewVisit(prev => ({
+        ...prev,
+        date: format(selectedDate, 'yyyy-MM-dd')
+      }));
+    }
+  }, [isAddDialogOpen, selectedDate]);
+
   const handleAddVisit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const selectedClient = clients.find((c) => c.id === newVisit.clientId);
     const selectedCarer = carers.find((c) => c.id === newVisit.carerId);
 
@@ -113,7 +127,7 @@ export default function Scheduling() {
       setNewVisit({
         clientId: '',
         carerId: '',
-        date: format(new Date(), 'yyyy-MM-dd'),
+        date: format(selectedDate, 'yyyy-MM-dd'), // Reset to selected date instead of today
         time: '09:00',
         duration: 60,
       });
@@ -126,7 +140,7 @@ export default function Scheduling() {
   const handleEditVisit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedVisit) return;
-    
+
     const selectedClient = clients.find((c) => c.id === editVisit.clientId);
     const selectedCarer = carers.find((c) => c.id === editVisit.carerId);
 
@@ -159,7 +173,7 @@ export default function Scheduling() {
 
   const handleDeleteVisit = async () => {
     if (!selectedVisit) return;
-    
+
     try {
       await deleteDoc(doc(db, 'visits', selectedVisit.id));
       toast.success('Visit deleted successfully');
@@ -272,18 +286,42 @@ export default function Scheduling() {
       </div>
 
       {/* Date Selector */}
-      <div className="flex items-center gap-4">
-        <Button variant="outline" onClick={() => setSelectedDate((prev) => addDays(prev, -1))}>
-          Previous
+      <div className="flex items-center gap-4 py-4">
+        <Button variant="outline" size="icon" onClick={() => setSelectedDate((prev) => addDays(prev, -1))}>
+          <ChevronLeft className="h-4 w-4" />
         </Button>
-        <div className="flex-1 text-center">
-          <p className="text-sm text-muted-foreground">Selected Date</p>
-          <p className="font-semibold text-foreground">
-            {format(selectedDate, 'EEEE, MMMM d, yyyy')}
-          </p>
+
+        <div className="flex-1 flex justify-center">
+          <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-[240px] justify-start text-left font-normal",
+                  !selectedDate && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="center">
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={(date) => {
+                  setSelectedDate(date || selectedDate);
+                  // Use setTimeout to skip a tick and ensure the popover closes cleanly
+                  setTimeout(() => setIsCalendarOpen(false), 0);
+                }}
+                required
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
         </div>
-        <Button variant="outline" onClick={() => setSelectedDate((prev) => addDays(prev, 1))}>
-          Next
+        <Button variant="outline" size="icon" onClick={() => setSelectedDate((prev) => addDays(prev, 1))}>
+          <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
 
@@ -291,7 +329,7 @@ export default function Scheduling() {
       <div className="space-y-4">
         {filteredVisits.length === 0 ? (
           <div className="rounded-xl bg-card p-12 text-center shadow-soft">
-            <Calendar className="mx-auto h-12 w-12 text-muted-foreground" />
+            <CalendarIcon className="mx-auto h-12 w-12 text-muted-foreground" />
             <h3 className="mt-4 text-lg font-semibold text-foreground">No visits scheduled</h3>
             <p className="mt-2 text-sm text-muted-foreground">
               Schedule visits for this date to see them here
@@ -325,11 +363,10 @@ export default function Scheduling() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${
-                      visit.status === 'completed'
-                        ? 'bg-secondary/10 text-secondary'
-                        : 'bg-primary/10 text-primary'
-                    }`}
+                    className={`rounded-full px-3 py-1 text-xs font-medium ${visit.status === 'completed'
+                      ? 'bg-secondary/10 text-secondary'
+                      : 'bg-primary/10 text-primary'
+                      }`}
                   >
                     {visit.status}
                   </span>
