@@ -1,11 +1,4 @@
 {
-  "redirects": [
-    {
-      "source": "/:path*",
-      "destination": "https://app.saforaai.com/client/dashboard",
-      "permanent": true
-    }
-  ],
   "rewrites": [
     {
       "source": "/(.*)",
